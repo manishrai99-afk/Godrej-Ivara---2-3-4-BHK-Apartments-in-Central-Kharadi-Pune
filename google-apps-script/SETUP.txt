@@ -1,0 +1,64 @@
+GODREJ IVARA — GOOGLE SHEET + EMAIL SETUP
+==========================================
+
+STEP 1: CREATE GOOGLE SHEET
+---------------------------
+1. Open https://sheets.google.com
+2. Click "Blank" to create new spreadsheet
+3. Name it: Godrej Ivara Leads
+
+
+STEP 2: ADD APPS SCRIPT
+-----------------------
+1. In the sheet: Extensions → Apps Script
+2. Delete any default code
+3. Copy-paste entire content from: google-apps-script/Code.gs
+4. Line 15 par apna email daalein:
+   NOTIFICATION_EMAIL = "your-email@gmail.com"
+   Example: NOTIFICATION_EMAIL = "rahul@gmail.com"
+5. Save project (Ctrl+S) — name: Godrej Ivara Leads
+
+
+STEP 3: RUN SETUP (ONE TIME)
+----------------------------
+1. Dropdown se function choose karein: setupSheet
+2. Click Run ▶
+3. Google permission maange — Allow karein
+4. "Sheet ready!" message aana chahiye
+5. Sheet mein "Leads" tab with headers dikhega
+
+
+STEP 4: DEPLOY WEB APP
+----------------------
+1. Click Deploy → New deployment
+2. Gear icon → Select type: Web app
+3. Settings:
+   - Description: Godrej Ivara Lead Form
+   - Execute as: Me
+   - Who has access: Anyone
+4. Click Deploy
+5. Authorize if asked
+6. COPY the Web App URL (ends with /exec)
+
+
+STEP 5: CONNECT WEBSITE
+-----------------------
+1. Open: js/config.js
+2. Paste your URL here:
+   googleScriptUrl: "https://script.google.com/macros/s/XXXXX/exec"
+3. Save file
+4. Test: website form bharein → Sheet mein row add honi chahiye + email aana chahiye
+
+
+TESTING
+-------
+- Form submit karein website par
+- Google Sheet → Leads tab check karein
+- Email inbox check karein (spam folder bhi dekhein)
+
+
+TROUBLESHOOTING
+---------------
+- Email nahi aaya? → NOTIFICATION_EMAIL sahi hai? Spam check karein
+- Sheet mein data nahi? → config.js mein URL sahi paste hai? Deploy "Anyone" access hai?
+- Permission error? → Apps Script dubara authorize karein
