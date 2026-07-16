@@ -264,6 +264,165 @@ leadForm.addEventListener("submit", async (event) => {
 
 const chatToggle = document.querySelector(".chat-toggle");
 const chatClose = document.querySelector(".chat-close");
+const chatBody = document.getElementById("chatBody");
+
+// Chat inline reply content for each action
+const chatReplies = {
+  pricing: {
+    userMsg: "Pricing & Floor Plans",
+    botMsg: `📊 <strong>Godrej Ivara Pricing:</strong><br>
+• 2 BHK Premium — ₹1.15 Cr onwards (725–750 sq.ft.)<br>
+• 3 BHK Elite — ₹1.41 Cr onwards (875–900 sq.ft.)<br>
+• 3 BHK Ultra — ₹1.83 Cr onwards (1100–1150 sq.ft.)<br>
+• 4 BHK Iconic — ₹2.79 Cr onwards (1550–1650 sq.ft.)<br>
+<em>🎁 Launch Offer + Spot Booking Benefits available!</em>`,
+    modalType: "pricing"
+  },
+  brochure: {
+    userMsg: "Download Brochure",
+    botMsg: `📄 <strong>Godrej Ivara Brochure</strong> includes:<br>
+• Complete floor plans & layouts<br>
+• Amenities & lifestyle details<br>
+• Location map & connectivity<br>
+• RERA & legal details<br>
+<em>Share your details to receive it instantly!</em>`,
+    modalType: "brochure"
+  },
+  quote: {
+    userMsg: "Get The Best Quote",
+    botMsg: `💰 <strong>Exclusive Launch Benefits:</strong><br>
+• EOI from just ₹2 Lakhs<br>
+• Spot Booking offer: Save ₹5–30 Lakhs<br>
+• Pre-launch pricing advantage<br>
+• Priority unit selection<br>
+<em>Share your details for a personalised quote!</em>`,
+    modalType: "quote"
+  },
+  virtual: {
+    userMsg: "Site Visit / Virtual Tour",
+    botMsg: `🏠 <strong>Visit Godrej Ivara:</strong><br>
+• 📍 Upper Kharadi Main Rd, Wagholi, Pune<br>
+• Free complimentary site visit arranged<br>
+• Virtual walkthrough available from home<br>
+• Mon–Sun: 10 AM – 7 PM<br>
+<em>Book your slot — it's 100% free!</em>`,
+    modalType: "virtual"
+  },
+  whatsapp: {
+    userMsg: "Pricing on WhatsApp",
+    botMsg: `💬 <strong>Get on WhatsApp:</strong><br>
+• Instant pricing sheet sent to your WhatsApp<br>
+• Floor plans & layout images<br>
+• Latest offers & cost sheet<br>
+• Quick query resolution<br>
+<em>Share your number — we'll send it now!</em>`,
+    modalType: "whatsapp"
+  },
+  callback: {
+    userMsg: "Get A Call Back",
+    botMsg: `📞 <strong>Call Back within 5 Minutes!</strong><br>
+• Speak directly with Rahul Agarwal<br>
+• Get personalised pricing guidance<br>
+• All queries answered on call<br>
+• Available: Mon–Sun, 9 AM – 9 PM<br>
+<em>Drop your number — calling you shortly!</em>`,
+    modalType: "callback"
+  }
+};
+
+function addChatMessage(html, isUser = false) {
+  const row = document.createElement("div");
+  row.className = `chat-msg-row ${isUser ? "user" : "advisor"}`;
+
+  if (!isUser) {
+    const av = document.createElement("span");
+    av.className = "chat-msg-avatar";
+    av.textContent = "RA";
+    row.appendChild(av);
+  }
+
+  const bubble = document.createElement("p");
+  bubble.className = "chat-bubble";
+  bubble.innerHTML = html;
+  row.appendChild(bubble);
+
+  // Insert before chat-actions
+  const actions = document.getElementById("chatActions");
+  chatBody.insertBefore(row, actions);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function handleChatAction(actionKey) {
+  const reply = chatReplies[actionKey];
+  if (!reply) return;
+
+  // Hide actions after selection
+  const actions = document.getElementById("chatActions");
+  if (actions) actions.style.display = "none";
+
+  // Add user message bubble
+  addChatMessage(reply.userMsg, true);
+
+  // Add bot typing indicator then reply
+  const typingRow = document.createElement("div");
+  typingRow.className = "chat-msg-row advisor";
+  typingRow.innerHTML = `<span class="chat-msg-avatar">RA</span><p class="chat-bubble chat-typing"><span></span><span></span><span></span></p>`;
+  chatBody.insertBefore(typingRow, document.getElementById("chatActions"));
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  window.setTimeout(() => {
+    typingRow.remove();
+    addChatMessage(reply.botMsg, false);
+
+    // After showing reply, add "Share Details" CTA bubble
+    window.setTimeout(() => {
+      const ctaRow = document.createElement("div");
+      ctaRow.className = "chat-msg-row advisor";
+
+      const av = document.createElement("span");
+      av.className = "chat-msg-avatar";
+      av.textContent = "RA";
+
+      const ctaBubble = document.createElement("p");
+      ctaBubble.className = "chat-bubble chat-cta-bubble";
+
+      const ctaBtn = document.createElement("button");
+      ctaBtn.className = "chat-cta-btn";
+      ctaBtn.textContent = "Share My Details →";
+      ctaBtn.addEventListener("click", () => {
+        openModal(reply.modalType);
+      });
+
+      ctaBubble.appendChild(ctaBtn);
+      ctaRow.appendChild(av);
+      ctaRow.appendChild(ctaBubble);
+      chatBody.insertBefore(ctaRow, document.getElementById("chatActions"));
+      chatBody.scrollTop = chatBody.scrollHeight;
+
+      // Show actions again with "Ask something else" option
+      const resetRow = document.createElement("div");
+      resetRow.className = "chat-msg-row center";
+      resetRow.innerHTML = `<button class="chat-reset-btn" id="chatResetBtn">⬅ Ask something else</button>`;
+      chatBody.insertBefore(resetRow, document.getElementById("chatActions"));
+
+      document.getElementById("chatResetBtn").addEventListener("click", () => {
+        // Remove all dynamic rows and show actions again
+        chatBody.querySelectorAll(".chat-msg-row:not(.advisor:first-child)").forEach(el => el.remove());
+        if (actions) actions.style.display = "";
+        chatBody.scrollTop = 0;
+      });
+
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }, 400);
+  }, 900);
+}
+
+// Bind chat action buttons
+document.querySelectorAll("[data-chat-action]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    handleChatAction(btn.dataset.chatAction);
+  });
+});
 
 if (chatToggle && chatPanel) {
   chatToggle.addEventListener("click", () => {

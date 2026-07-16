@@ -399,15 +399,18 @@
         </div>
         <button class="chat-close" aria-label="Close chat">&times;</button>
       </header>
-      <div class="chat-body">
-        <p class="chat-bubble">Hey! I'm Rahul. How can I help you understand Godrej Ivara?</p>
-        <div class="chat-actions">
-          <button data-open-modal="pricing">Pricing &amp; Floor Plans</button>
-          <button data-open-modal="brochure">Download Brochure</button>
-          <button data-open-modal="quote">Get The Best Quote</button>
-          <button data-open-modal="virtual">Site Visit / Virtual Tour</button>
-          <button data-open-modal="whatsapp">Pricing on WhatsApp</button>
-          <button data-open-modal="callback">Get A Call Back</button>
+      <div class="chat-body" id="chatBody">
+        <div class="chat-msg-row advisor">
+          <span class="chat-msg-avatar">RA</span>
+          <p class="chat-bubble">Hey! I'm Rahul. How can I help you understand Godrej Ivara?</p>
+        </div>
+        <div class="chat-actions" id="chatActions">
+          <button data-chat-action="pricing">🏷️ Pricing &amp; Floor Plans</button>
+          <button data-chat-action="brochure">📄 Download Brochure</button>
+          <button data-chat-action="quote">💰 Get The Best Quote</button>
+          <button data-chat-action="virtual">🏠 Site Visit / Virtual Tour</button>
+          <button data-chat-action="whatsapp">💬 Pricing on WhatsApp</button>
+          <button data-chat-action="callback">📞 Get A Call Back</button>
         </div>
       </div>
     </div>
