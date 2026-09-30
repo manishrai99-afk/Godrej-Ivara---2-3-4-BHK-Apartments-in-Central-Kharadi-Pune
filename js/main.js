@@ -337,7 +337,7 @@ function addChatMessage(html, isUser = false) {
   if (!isUser) {
     const av = document.createElement("span");
     av.className = "chat-msg-avatar";
-    av.textContent = "RA";
+    av.textContent = "MR";
     row.appendChild(av);
   }
 
